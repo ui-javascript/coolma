@@ -43,7 +43,7 @@ export function factoryLabel(
 
   /** @type {State} */
   function start(code) {
-    assert(code === codes.leftSquareBracket, 'expected `[`')
+    assert(code === codes.leftParenthesis, 'expected `[`')
     effects.enter(type)
     effects.enter(markerType)
     effects.consume(code)
@@ -53,7 +53,7 @@ export function factoryLabel(
 
   /** @type {State} */
   function afterStart(code) {
-    if (code === codes.rightSquareBracket) {
+    if (code === codes.rightParenthesis) {
       effects.enter(markerType)
       effects.consume(code)
       effects.exit(markerType)
@@ -67,7 +67,7 @@ export function factoryLabel(
 
   /** @type {State} */
   function lineStart(code) {
-    if (code === codes.rightSquareBracket && !balance) {
+    if (code === codes.rightParenthesis && !balance) {
       return atClosingBrace(code)
     }
 
@@ -87,13 +87,13 @@ export function factoryLabel(
     }
 
     if (
-      code === codes.leftSquareBracket &&
+      code === codes.leftParenthesis &&
       ++balance > constants.linkResourceDestinationBalanceMax
     ) {
       return nok(code)
     }
 
-    if (code === codes.rightSquareBracket && !balance--) {
+    if (code === codes.rightParenthesis && !balance--) {
       effects.exit(types.chunkText)
       return atClosingBrace(code)
     }
@@ -115,9 +115,9 @@ export function factoryLabel(
   /** @type {State} */
   function dataEscape(code) {
     if (
-      code === codes.leftSquareBracket ||
+      code === codes.leftParenthesis ||
       code === codes.backslash ||
-      code === codes.rightSquareBracket
+      code === codes.rightParenthesis
     ) {
       effects.consume(code)
       size++

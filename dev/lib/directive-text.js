@@ -25,7 +25,7 @@ const attributes = {tokenize: tokenizeAttributes, partial: true}
 function previous(code) {
   // If there is a previous code, there will always be a tail.
   return (
-    code !== codes.colon ||
+    code !== codes.atSign ||
     this.events[this.events.length - 1][1].type === types.characterEscape
   )
 }
@@ -38,7 +38,7 @@ function tokenizeDirectiveText(effects, ok, nok) {
 
   /** @type {State} */
   function start(code) {
-    assert(code === codes.colon, 'expected `:`')
+    assert(code === codes.atSign, 'expected `:`')
     assert(previous.call(self, self.previous), 'expected correct previous')
     effects.enter('directiveText')
     effects.enter('directiveTextMarker')
@@ -49,9 +49,9 @@ function tokenizeDirectiveText(effects, ok, nok) {
 
   /** @type {State} */
   function afterName(code) {
-    return code === codes.colon
+    return code === codes.atSign
       ? nok(code)
-      : code === codes.leftSquareBracket
+      : code === codes.leftParenthesis
       ? effects.attempt(label, afterLabel, afterLabel)(code)
       : afterLabel(code)
   }

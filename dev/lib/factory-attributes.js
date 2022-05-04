@@ -81,7 +81,7 @@ export function factoryAttributes(
       return shortcutStart(code)
     }
 
-    if (code === codes.colon || code === codes.underscore || asciiAlpha(code)) {
+    if (code === codes.atSign || code === codes.underscore || asciiAlpha(code)) {
       effects.enter(attributeType)
       effects.enter(attributeNameType)
       effects.consume(code)
@@ -167,7 +167,7 @@ export function factoryAttributes(
     if (
       code === codes.dash ||
       code === codes.dot ||
-      code === codes.colon ||
+      code === codes.atSign ||
       code === codes.underscore ||
       asciiAlphanumeric(code)
     ) {

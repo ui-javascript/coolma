@@ -41,7 +41,7 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
 
   /** @type {State} */
   function start(code) {
-    assert(code === codes.colon, 'expected `:`')
+    assert(code === codes.atSign, 'expected `:`')
     effects.enter('directiveContainer')
     effects.enter('directiveContainerFence')
     effects.enter('directiveContainerSequence')
@@ -50,7 +50,7 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
 
   /** @type {State} */
   function sequenceOpen(code) {
-    if (code === codes.colon) {
+    if (code === codes.atSign) {
       effects.consume(code)
       sizeOpen++
       return sequenceOpen
@@ -72,7 +72,7 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
 
   /** @type {State} */
   function afterName(code) {
-    return code === codes.leftSquareBracket
+    return code === codes.leftParenthesis
       ? effects.attempt(label, afterLabel, afterLabel)(code)
       : afterLabel(code)
   }
@@ -213,7 +213,7 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
 
     /** @type {State} */
     function closingSequence(code) {
-      if (code === codes.colon) {
+      if (code === codes.atSign) {
         effects.consume(code)
         size++
         return closingSequence

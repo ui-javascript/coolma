@@ -12,7 +12,7 @@ import {directiveText} from './directive-text.js'
  */
 export function directive() {
   return {
-    text: {[codes.colon]: directiveText},
-    flow: {[codes.colon]: [directiveContainer, directiveLeaf]}
+    text: {[codes.atSign]: directiveText},
+    flow: {[codes.atSign]: [directiveContainer, directiveLeaf]}
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "coolma",
-  "version": "2.1.3",
+  "version": "3.0.0",
   "description": "support directives @anno(content){attr=xxx})",
   "license": "MIT",
   "publisher": "luo0412",
@@ -63,7 +63,6 @@
     "xo": "^0.47.0"
   },
   "scripts": {
-    "publish": "npm publish",
     "build": "rimraf \"dev/**/*.d.ts\" \"test/**/*.d.ts\" && tsc && type-coverage && micromark-build",
     "format": "remark . -qfo && prettier . -w --loglevel warn && xo --fix",
     "test-api": "node --conditions development test/index.js",

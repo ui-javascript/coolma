@@ -5,10 +5,10 @@
 
 import test from 'tape'
 import {micromark} from 'micromark'
-import {htmlVoidElements} from 'html-void-elements'
+// Import {htmlVoidElements} from 'html-void-elements'
 import {directive as syntax, directiveHtml as html} from '../dev/index.js'
 
-const own = {}.hasOwnProperty
+// Const own = {}.hasOwnProperty
 
 test('micromark-extension-directive (syntax)', (t) => {
   t.test('text', (t) => {
@@ -1239,7 +1239,7 @@ test('content', (t) => {
     'should support character escapes and character references in label'
   )
 
-  // t.equal(
+  // T.equal(
   //   micromark(':abbr[x\\[y\\]z]', options({abbr})),
   //   '<p><abbr>x[y]z</abbr></p>',
   //   'should support escaped brackets in a label'
@@ -1473,68 +1473,68 @@ function abbr(d) {
   this.tag('</abbr>')
 }
 
-/** @type {Handle} */
-function youtube(d) {
-  const attrs = d.attributes || {}
-  const v = attrs.v
-  /** @type {string} */
-  let prop
+// /** @type {Handle} */
+// function youtube(d) {
+//   const attrs = d.attributes || {}
+//   const v = attrs.v
+//   /** @type {string} */
+//   let prop
 
-  if (!v) return false
+//   if (!v) return false
 
-  const list = [
-    'src="https://www.youtube.com/embed/' + this.encode(v) + '"',
-    'allowfullscreen'
-  ]
+//   const list = [
+//     'src="https://www.youtube.com/embed/' + this.encode(v) + '"',
+//     'allowfullscreen'
+//   ]
 
-  if (d.label) {
-    list.push('title="' + this.encode(d.label) + '"')
-  }
+//   if (d.label) {
+//     list.push('title="' + this.encode(d.label) + '"')
+//   }
 
-  for (prop in attrs) {
-    if (prop !== 'v') {
-      list.push(this.encode(prop) + '="' + this.encode(attrs[prop]) + '"')
-    }
-  }
+//   for (prop in attrs) {
+//     if (prop !== 'v') {
+//       list.push(this.encode(prop) + '="' + this.encode(attrs[prop]) + '"')
+//     }
+//   }
 
-  this.tag('<iframe ' + list.join(' ') + '>')
+//   this.tag('<iframe ' + list.join(' ') + '>')
 
-  if (d.content) {
-    this.lineEndingIfNeeded()
-    this.raw(d.content)
-    this.lineEndingIfNeeded()
-  }
+//   if (d.content) {
+//     this.lineEndingIfNeeded()
+//     this.raw(d.content)
+//     this.lineEndingIfNeeded()
+//   }
 
-  this.tag('</iframe>')
-}
+//   this.tag('</iframe>')
+// }
 
-/** @type {Handle} */
-function h(d) {
-  const content = d.content || d.label
-  const attrs = d.attributes || {}
-  /** @type {Array.<string>} */
-  const list = []
-  /** @type {string} */
-  let prop
+// /** @type {Handle} */
+// function h(d) {
+//   const content = d.content || d.label
+//   const attrs = d.attributes || {}
+//   /** @type {Array.<string>} */
+//   const list = []
+//   /** @type {string} */
+//   let prop
 
-  for (prop in attrs) {
-    if (own.call(attrs, prop)) {
-      list.push(this.encode(prop) + '="' + this.encode(attrs[prop]) + '"')
-    }
-  }
+//   for (prop in attrs) {
+//     if (own.call(attrs, prop)) {
+//       list.push(this.encode(prop) + '="' + this.encode(attrs[prop]) + '"')
+//     }
+//   }
 
-  this.tag('<' + d.name)
-  if (list.length > 0) this.tag(' ' + list.join(' '))
-  this.tag('>')
+//   this.tag('<' + d.name)
+//   if (list.length > 0) this.tag(' ' + list.join(' '))
+//   this.tag('>')
 
-  if (content) {
-    if (d.type === 'containerDirective') this.lineEndingIfNeeded()
-    this.raw(content)
-    if (d.type === 'containerDirective') this.lineEndingIfNeeded()
-  }
+//   if (content) {
+//     if (d.type === 'containerDirective') this.lineEndingIfNeeded()
+//     this.raw(content)
+//     if (d.type === 'containerDirective') this.lineEndingIfNeeded()
+//   }
 
-  if (!htmlVoidElements.includes(d.name)) this.tag('</' + d.name + '>')
-}
+//   if (!htmlVoidElements.includes(d.name)) this.tag('</' + d.name + '>')
+// }
 
 /**
  * @param {HtmlOptions} [options]

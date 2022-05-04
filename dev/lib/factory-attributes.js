@@ -123,6 +123,7 @@ export function factoryAttributes(
       code === codes.dot ||
       code === codes.lessThan ||
       code === codes.equalsTo ||
+      code === codes.colon ||
       code === codes.greaterThan ||
       code === codes.graveAccent ||
       code === codes.rightCurlyBrace ||
@@ -144,6 +145,7 @@ export function factoryAttributes(
       code === codes.apostrophe ||
       code === codes.lessThan ||
       code === codes.equalsTo ||
+      code === codes.colon ||
       code === codes.greaterThan ||
       code === codes.graveAccent
     ) {
@@ -194,7 +196,7 @@ export function factoryAttributes(
 
   /** @type {State} */
   function nameAfter(code) {
-    if (code === codes.equalsTo) {
+    if (code === codes.colon || code === codes.equalsTo) {
       effects.enter(attributeInitializerType)
       effects.consume(code)
       effects.exit(attributeInitializerType)
@@ -212,6 +214,7 @@ export function factoryAttributes(
       code === codes.eof ||
       code === codes.lessThan ||
       code === codes.equalsTo ||
+      code === codes.colon ||
       code === codes.greaterThan ||
       code === codes.graveAccent ||
       code === codes.rightCurlyBrace ||
@@ -252,6 +255,7 @@ export function factoryAttributes(
       code === codes.apostrophe ||
       code === codes.lessThan ||
       code === codes.equalsTo ||
+      code === codes.colon ||
       code === codes.greaterThan ||
       code === codes.graveAccent
     ) {

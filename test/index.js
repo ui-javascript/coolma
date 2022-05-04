@@ -1239,6 +1239,12 @@ test('content', (t) => {
     'should support character escapes and character references in label'
   )
 
+  t.equal(
+    micromark('@abbr(x\\&y&amp;z){title: "hhee" hhh: "333"}', options({abbr})),
+    '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
+    'should support character escapes and character references in label'
+  )
+
   // T.equal(
   //   micromark(':abbr[x\\[y\\]z]', options({abbr})),
   //   '<p><abbr>x[y]z</abbr></p>',

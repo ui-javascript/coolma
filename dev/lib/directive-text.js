@@ -11,6 +11,7 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factoryAttributes} from './factory-attributes.js'
 import {factoryLabel} from './factory-label.js'
 import {factoryName} from './factory-name.js'
+import {factoryNamespace} from './factory-namespace.js'
 
 /** @type {Construct} */
 export const directiveText = {
@@ -18,6 +19,7 @@ export const directiveText = {
   previous
 }
 
+const namespace = {tokenize: tokenizeNamespace, partial: true}
 const label = {tokenize: tokenizeLabel, partial: true}
 const attributes = {tokenize: tokenizeAttributes, partial: true}
 
@@ -51,6 +53,15 @@ function tokenizeDirectiveText(effects, ok, nok) {
   function afterName(code) {
     return code === codes.atSign
       ? nok(code)
+      : code === codes.leftSquareBracket
+      ? effects.attempt(namespace, afterNamespace, afterNamespace)(code)
+      : afterNamespace(code)
+  }
+
+  /** @type {State} */
+  function afterNamespace(code) {
+    return code === codes.leftSquareBracket
+      ? nok(code)
       : code === codes.leftParenthesis
       ? effects.attempt(label, afterLabel, afterLabel)(code)
       : afterLabel(code)
@@ -80,6 +91,19 @@ function tokenizeLabel(effects, ok, nok) {
     'directiveTextLabel',
     'directiveTextLabelMarker',
     'directiveTextLabelString'
+  )
+}
+
+/** @type {Tokenizer} */
+function tokenizeNamespace(effects, ok, nok) {
+  // Always a `[`
+  return factoryNamespace(
+    effects,
+    ok,
+    nok,
+    'directiveTextNamespace',
+    'directiveTextNamespaceMarker',
+    'directiveTextNamespaceString'
   )
 }
 

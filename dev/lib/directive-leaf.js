@@ -12,10 +12,12 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factoryAttributes} from './factory-attributes.js'
 import {factoryLabel} from './factory-label.js'
 import {factoryName} from './factory-name.js'
+import { factoryNamespace } from './factory-namespace.js'
 
 /** @type {Construct} */
 export const directiveLeaf = {tokenize: tokenizeDirectiveLeaf}
 
+const namespace = {tokenize: tokenizeNamespace, partial: true}
 const label = {tokenize: tokenizeLabel, partial: true}
 const attributes = {tokenize: tokenizeAttributes, partial: true}
 
@@ -53,6 +55,13 @@ function tokenizeDirectiveLeaf(effects, ok, nok) {
 
   /** @type {State} */
   function afterName(code) {
+    return code === codes.leftSquareBracket
+      ? effects.attempt(namespace, afterNamespace, afterNamespace)(code)
+      : afterNamespace(code)
+  }
+
+  /** @type {State} */
+  function afterNamespace(code) {
     return code === codes.leftParenthesis
       ? effects.attempt(label, afterLabel, afterLabel)(code)
       : afterLabel(code)
@@ -91,6 +100,20 @@ function tokenizeLabel(effects, ok, nok) {
     'directiveLeafLabel',
     'directiveLeafLabelMarker',
     'directiveLeafLabelString',
+    true
+  )
+}
+
+/** @type {Tokenizer} */
+function tokenizeNamespace(effects, ok, nok) {
+  // Always a `[`
+  return factoryNamespace(
+    effects,
+    ok,
+    nok,
+    'directiveLeafNamespace',
+    'directiveLeafNamespaceMarker',
+    'directiveLeafNamespaceString',
     true
   )
 }

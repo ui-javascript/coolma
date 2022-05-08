@@ -14,6 +14,7 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factoryAttributes} from './factory-attributes.js'
 import {factoryLabel} from './factory-label.js'
 import {factoryName} from './factory-name.js'
+import {factoryNamespace} from './factory-namespace.js'
 
 /** @type {Construct} */
 export const directiveContainer = {
@@ -21,6 +22,7 @@ export const directiveContainer = {
   concrete: true
 }
 
+const namespace = {tokenize: tokenizeNamespace, partial: true}
 const label = {tokenize: tokenizeLabel, partial: true}
 const attributes = {tokenize: tokenizeAttributes, partial: true}
 const nonLazyLine = {tokenize: tokenizeNonLazyLine, partial: true}
@@ -72,10 +74,18 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
 
   /** @type {State} */
   function afterName(code) {
+    return code === codes.leftSquareBracket
+      ? effects.attempt(namespace, afterNamespace, afterNamespace)(code)
+      : afterNamespace(code)
+  }
+
+  /** @type {State} */
+  function afterNamespace(code) {
     return code === codes.leftParenthesis
       ? effects.attempt(label, afterLabel, afterLabel)(code)
       : afterLabel(code)
   }
+
 
   /** @type {State} */
   function afterLabel(code) {
@@ -246,6 +256,20 @@ function tokenizeLabel(effects, ok, nok) {
     'directiveContainerLabel',
     'directiveContainerLabelMarker',
     'directiveContainerLabelString',
+    true
+  )
+}
+
+/** @type {Tokenizer} */
+function tokenizeNamespace(effects, ok, nok) {
+  // Always a `[`
+  return factoryNamespace(
+    effects,
+    ok,
+    nok,
+    'directiveContainerNamespace',
+    'directiveContainerNamespaceMarker',
+    'directiveContainerNamespaceString',
     true
   )
 }

@@ -12,6 +12,7 @@
  * @property {DirectiveType} type
  * @property {string} name
  * @property {string} [label]
+ * @property {string} [namespace]
  * @property {Record<string, string>} [attributes]
  * @property {string} [content]
  * @property {number} [_fenceCount]
@@ -47,12 +48,14 @@ export function directiveHtml(options = {}) {
       },
       directiveLeafAttributes: enterAttributes,
       directiveLeafLabel: enterLabel,
+      directiveLeafNamespace: enterNamespace,
 
       directiveText() {
         return enter.call(this, 'textDirective')
       },
       directiveTextAttributes: enterAttributes,
-      directiveTextLabel: enterLabel
+      directiveTextLabel: enterLabel,
+      directiveTextNamespace: enterNamespace
     },
     exit: {
       directiveContainer: exit,
@@ -73,6 +76,7 @@ export function directiveHtml(options = {}) {
       directiveLeafAttributeValue: exitAttributeValue,
       directiveLeafAttributes: exitAttributes,
       directiveLeafLabel: exitLabel,
+      directiveLeafNamespace: exitNamespace,
       directiveLeafName: exitName,
 
       directiveText: exit,
@@ -82,6 +86,7 @@ export function directiveHtml(options = {}) {
       directiveTextAttributeValue: exitAttributeValue,
       directiveTextAttributes: exitAttributes,
       directiveTextLabel: exitLabel,
+      directiveTextNamespace: exitNamespace,
       directiveTextName: exitName
     }
   }
@@ -112,12 +117,26 @@ export function directiveHtml(options = {}) {
   }
 
   /** @type {_Handle} */
+  function enterNamespace() {
+    this.buffer()
+  }
+
+  /** @type {_Handle} */
   function exitLabel() {
     const data = this.resume()
     /** @type {Directive[]} */
     // @ts-expect-error
     const stack = this.getData('directiveStack')
     stack[stack.length - 1].label = data
+  }
+
+  /** @type {_Handle} */
+  function exitNamespace() {
+    const data = this.resume()
+    /** @type {Directive[]} */
+    // @ts-expect-error
+    const stack = this.getData('directiveStack')
+    stack[stack.length - 1].namespace = data
   }
 
   /** @type {_Handle} */

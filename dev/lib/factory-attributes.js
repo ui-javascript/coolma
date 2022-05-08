@@ -31,7 +31,7 @@ import {types} from 'micromark-util-symbol/types.js'
  * @returns {code is number}
  */
 export function markdownLineEndingOrComma(code) {
-  return (code !== null && code < codes.horizontalTab) || code === codes.comma
+  return markdownLineEnding(code) || code === codes.comma
 }
 
 /**
@@ -42,10 +42,7 @@ export function markdownLineEndingOrComma(code) {
  * @returns {code is number}
  */
 export function markdownLineEndingOrSpaceOrComma(code) {
-  return (
-    (code !== null && (code < codes.nul || code === codes.space)) ||
-    code === codes.comma
-  )
+  return markdownLineEndingOrSpace(code) || code === codes.comma
 }
 
 /**

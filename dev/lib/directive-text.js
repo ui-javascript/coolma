@@ -103,7 +103,9 @@ function tokenizeNamespace(effects, ok, nok) {
     nok,
     'directiveTextNamespace',
     'directiveTextNamespaceMarker',
-    'directiveTextNamespaceString'
+    'directiveTextNamespaceString',
+    // @todo 命名空间可以限制不能有换行等
+    false
   )
 }
 

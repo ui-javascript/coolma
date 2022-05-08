@@ -8,6 +8,8 @@ coolma -- markdown的注解形式增强
 
 举例:
 
+- https://ui-javascript.github.io/demo-coolma-202205/
+
 @abbr(HTML, "HyperText Markup Language")
 
 @abbr(HTML, "HyperText Markup Language"){color: red}

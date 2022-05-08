@@ -121,8 +121,8 @@ test('micromark-extension-directive (syntax)', (t) => {
     )
 
     t.equal(
-      micromark('@a[', options()),
-      '<p>[</p>',
+      micromark('@a(', options()),
+      '<p>(</p>',
       'should support a name followed by an unclosed `[`'
     )
 
@@ -133,9 +133,9 @@ test('micromark-extension-directive (syntax)', (t) => {
     )
 
     t.equal(
-      micromark('@a[b', options()),
-      '<p>[b</p>',
-      'should support a name followed by an unclosed `[` w/ content'
+      micromark('@a(b', options()),
+      '<p>(b</p>',
+      'should support a name followed by an unclosed `(` w/ content'
     )
 
     t.equal(
@@ -306,77 +306,77 @@ test('micromark-extension-directive (syntax)', (t) => {
       'should support double quoted attributes'
     )
 
-    // t.equal(
-    //   micromark("@a{a='b' c='d e f'}", options()),
-    //   '<p></p>',
-    //   'should support single quoted attributes'
-    // )
+    t.equal(
+      micromark("@a{a='b' c='d e f'}", options()),
+      '<p></p>',
+      'should support single quoted attributes'
+    )
 
-    // t.equal(
-    //   micromark('@a{a = b c\t=\t\'d\' f  =\r"g"}', options()),
-    //   '<p></p>',
-    //   'should support whitespace around initializers'
-    // )
+    t.equal(
+      micromark('@a{a = b c\t=\t\'d\' f  =\r"g"}', options()),
+      '<p></p>',
+      'should support whitespace around initializers'
+    )
 
-    // t.equal(
-    //   micromark('@a{b==}', options()),
-    //   '<p>{b==}</p>',
-    //   'should not support `=` to start an unquoted attribute value'
-    // )
+    t.equal(
+      micromark('@a{b==}', options()),
+      '<p>{b==}</p>',
+      'should not support `=` to start an unquoted attribute value'
+    )
 
-    // t.equal(
-    //   micromark('@a{b=}', options()),
-    //   '<p>{b=}</p>',
-    //   'should not support a missing attribute value after `=`'
-    // )
+    t.equal(
+      micromark('@a{b=}', options()),
+      '<p>{b=}</p>',
+      'should not support a missing attribute value after `=`'
+    )
 
-    // t.equal(
-    //   micromark("@a{b=c'}", options()),
-    //   "<p>{b=c'}</p>",
-    //   'should not support an apostrophe in an unquoted attribute value'
-    // )
+    t.equal(
+      micromark("@a{b=c'}", options()),
+      "<p>{b=c'}</p>",
+      'should not support an apostrophe in an unquoted attribute value'
+    )
 
-    // t.equal(
-    //   micromark('@a{b=c`}', options()),
-    //   '<p>{b=c`}</p>',
-    //   'should not support a grave accent in an unquoted attribute value'
-    // )
+    t.equal(
+      micromark('@a{b=c`}', options()),
+      '<p>{b=c`}</p>',
+      'should not support a grave accent in an unquoted attribute value'
+    )
 
-    // t.equal(
-    //   micromark('@a{b=a💚b}', options()),
-    //   '<p></p>',
-    //   'should support most other characters in unquoted attribute values'
-    // )
+    t.equal(
+      micromark('@a{b=a💚b}', options()),
+      '<p></p>',
+      'should support most other characters in unquoted attribute values'
+    )
 
-    // t.equal(
-    //   micromark('@a{b="c', options()),
-    //   '<p>{b=&quot;c</p>',
-    //   'should not support an EOF in a quoted attribute value'
-    // )
+    t.equal(
+      micromark('@a{b="c', options()),
+      '<p>{b=&quot;c</p>',
+      'should not support an EOF in a quoted attribute value'
+    )
 
-    // t.equal(
-    //   micromark('@a{b="a💚b"}', options()),
-    //   '<p></p>',
-    //   'should support most other characters in quoted attribute values'
-    // )
+    t.equal(
+      micromark('@a{b="a💚b"}', options()),
+      '<p></p>',
+      'should support most other characters in quoted attribute values'
+    )
 
-    // t.equal(
-    //   micromark('@a{b="\nc\r  d"}', options()),
-    //   '<p></p>',
-    //   'should support EOLs in quoted attribute values'
-    // )
+    t.equal(
+      micromark('@a{b="\nc\r  d"}', options()),
+      '<p></p>',
+      'should support EOLs in quoted attribute values'
+    )
 
-    // t.equal(
-    //   micromark('@a{b="c"', options()),
-    //   '<p>{b=&quot;c&quot;</p>',
-    //   'should not support an EOF after a quoted attribute value'
-    // )
+    t.equal(
+      micromark('@a{b="c"', options()),
+      '<p>{b=&quot;c&quot;</p>',
+      'should not support an EOF after a quoted attribute value'
+    )
 
     t.end()
   })
 
   t.test('leaf', (t) => {
-    // T.equal(micromark('@@b', options()), '', 'should support a directive')
+    // t.equal(micromark('@@b', options()), '', 'should support a directive')
 
     // t.equal(
     //   micromark(':', options()),
@@ -1236,6 +1236,24 @@ test('content', (t) => {
   t.equal(
     micromark('@abbr(x\\&y&amp;z)', options({abbr})),
     '<p><abbr>x&amp;y&amp;z</abbr></p>',
+    'should support character escapes and character references in label'
+  )
+
+  t.equal(
+    micromark('@abbr(x\\&y&amp;z){title: "hhee" test , hhh: "333", }', options({abbr})),
+    '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
+    'should support character escapes and character references in label'
+  )
+
+  t.equal(
+    micromark('@abbr(x\\&y&amp;z){title: hhee, hhh: "333"}', options({abbr})),
+    '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
+    'should support character escapes and character references in label'
+  )
+
+  t.equal(
+    micromark('@abbr(x\\&y&amp;z){title: hhee, hhh: 333, }', options({abbr})),
+    '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
     'should support character escapes and character references in label'
   )
 

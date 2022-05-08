@@ -5,14 +5,14 @@
  */
 
 import {ok as assert} from 'uvu/assert'
-// import {factorySpace} from 'micromark-factory-space'
+import {factorySpace} from 'micromark-factory-space'
 // import {factoryWhitespace} from 'micromark-factory-whitespace'
 import {
   asciiAlpha,
   asciiAlphanumeric,
-  // markdownLineEnding,
-  // markdownLineEndingOrSpace,
-  // markdownSpace
+  markdownLineEnding,
+  markdownLineEndingOrSpace,
+  markdownSpace
 } from 'micromark-util-character'
 import {codes} from 'micromark-util-symbol/codes.js'
 import {types} from 'micromark-util-symbol/types.js'
@@ -31,8 +31,8 @@ import {types} from 'micromark-util-symbol/types.js'
  * @param {Code} code
  * @returns {code is number}
  */
- export function markdownLineEnding(code) {
-  return code !== null && code < codes.horizontalTab
+ export function markdownLineEndingOrComma(code) {
+  return (code !== null && code < codes.horizontalTab) || (code === codes.comma)
 }
 
 /**
@@ -42,37 +42,15 @@ import {types} from 'micromark-util-symbol/types.js'
  * @param {Code} code
  * @returns {code is number}
  */
- export function markdownLineEndingOrSpace(code) {
-  return code !== null && (code < codes.nul || code === codes.space)
+ export function markdownLineEndingOrSpaceOrComma(code) {
+  return (code !== null && (code < codes.nul || code === codes.space)) || (code === codes.comma)
 }
-
-/**
- * Check whether a character code is a markdown space.
- *
- * A **markdown space** is the concrete character U+0020 SPACE (SP) and the
- * virtual characters M-0001 VIRTUAL SPACE (VS) and M-0002 HORIZONTAL TAB (HT).
- *
- * In micromark, the actual character U+0009 CHARACTER TABULATION (HT) is
- * replaced by one M-0002 HORIZONTAL TAB (HT) and between 0 and 3 M-0001 VIRTUAL
- * SPACE (VS) characters, depending on the column at which the tab occurred.
- *
- * @param {Code} code
- * @returns {code is number}
- */
-export function markdownSpace(code) {
-  return (
-    code === codes.horizontalTab ||
-    code === codes.virtualSpace ||
-    code === codes.space 
-  )
-}
-
 
 /**
  * @param {Effects} effects
  * @param {State} ok
  */
- export function factoryWhitespace(effects, ok) {
+ export function factoryWhitespaceOrComma(effects, ok) {
   /** @type {boolean} */
   let seen
 
@@ -80,7 +58,7 @@ export function markdownSpace(code) {
 
   /** @type {State} */
   function start(code) {
-    if (markdownLineEnding(code) || code === codes.comma) {
+    if (markdownLineEndingOrComma(code)) {
       effects.enter(types.lineEnding)
       effects.consume(code)
       effects.exit(types.lineEnding)
@@ -100,40 +78,7 @@ export function markdownSpace(code) {
   }
 }
 
-/**
- * @param {Effects} effects
- * @param {State} ok
- * @param {string} type
- * @param {number} [max=Infinity]
- * @returns {State}
- */
- export function factorySpace(effects, ok, type, max) {
-  const limit = max ? max - 1 : Number.POSITIVE_INFINITY
-  let size = 0
 
-  return start
-
-  /** @type {State} */
-  function start(code) {
-    if (markdownSpace(code)) {
-      effects.enter(type)
-      return prefix(code)
-    }
-
-    return ok(code)
-  }
-
-  /** @type {State} */
-  function prefix(code) {
-    if (markdownSpace(code) && size++ < limit) {
-      effects.consume(code)
-      return prefix
-    }
-
-    effects.exit(type)
-    return ok(code)
-  }
-}
 
 /**
  * @param {Effects} effects
@@ -214,8 +159,8 @@ export function factoryAttributes(
       return factorySpace(effects, between, types.whitespace)(code)
     }
 
-    if (!disallowEol && (markdownLineEndingOrSpace(code) || code === codes.comma)) {
-      return factoryWhitespace(effects, between)(code)
+    if (!disallowEol && (markdownLineEndingOrSpaceOrComma(code))) {
+      return factoryWhitespaceOrComma(effects, between)(code)
     }
 
     return end(code)
@@ -274,8 +219,7 @@ export function factoryAttributes(
       code === codes.numberSign ||
       code === codes.dot ||
       code === codes.rightCurlyBrace ||
-      markdownLineEndingOrSpace(code)
-      || code === codes.comma
+      markdownLineEndingOrSpaceOrComma(code)
     ) {
       effects.exit(type + 'Value')
       effects.exit(type)
@@ -306,8 +250,8 @@ export function factoryAttributes(
       return factorySpace(effects, nameAfter, types.whitespace)(code)
     }
 
-    if (!disallowEol && (markdownLineEndingOrSpace(code) || code === codes.comma)) {
-      return factoryWhitespace(effects, nameAfter)(code)
+    if (!disallowEol && (markdownLineEndingOrSpaceOrComma(code))) {
+      return factoryWhitespaceOrComma(effects, nameAfter)(code)
     }
 
     return nameAfter(code)
@@ -355,8 +299,8 @@ export function factoryAttributes(
       return factorySpace(effects, valueBefore, types.whitespace)(code)
     }
 
-    if (!disallowEol && (markdownLineEndingOrSpace(code) || code === codes.comma)) {
-      return factoryWhitespace(effects, valueBefore)(code)
+    if (!disallowEol && (markdownLineEndingOrSpaceOrComma(code))) {
+      return factoryWhitespaceOrComma(effects, valueBefore)(code)
     }
 
     effects.enter(attributeValueType)
@@ -381,7 +325,7 @@ export function factoryAttributes(
       return nok(code)
     }
 
-    if (code === codes.rightCurlyBrace || (markdownLineEndingOrSpace(code) || code === codes.comma)) {
+    if (code === codes.rightCurlyBrace || (markdownLineEndingOrSpaceOrComma(code))) {
       effects.exit(attributeValueData)
       effects.exit(attributeValueType)
       effects.exit(attributeType)
@@ -422,7 +366,7 @@ export function factoryAttributes(
     if (markdownLineEnding(code)) {
       return disallowEol
         ? nok(code)
-        : factoryWhitespace(effects, valueQuotedBetween)(code)
+        : factoryWhitespaceOrComma(effects, valueQuotedBetween)(code)
     }
 
     effects.enter(attributeValueData)
@@ -432,7 +376,7 @@ export function factoryAttributes(
 
   /** @type {State} */
   function valueQuoted(code) {
-    if (code === marker || code === codes.eof || (markdownLineEnding(code) || code === codes.comma)) {
+    if (code === marker || code === codes.eof || (markdownLineEndingOrComma(code))) {
       effects.exit(attributeValueData)
       return valueQuotedBetween(code)
     }
@@ -443,7 +387,7 @@ export function factoryAttributes(
 
   /** @type {State} */
   function valueQuotedAfter(code) {
-    return code === codes.rightCurlyBrace || (markdownLineEndingOrSpace(code) || code === codes.comma)
+    return code === codes.rightCurlyBrace || (markdownLineEndingOrSpaceOrComma(code))
       ? between(code)
       : end(code)
   }

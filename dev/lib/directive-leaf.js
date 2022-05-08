@@ -12,7 +12,7 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factoryAttributes} from './factory-attributes.js'
 import {factoryLabel} from './factory-label.js'
 import {factoryName} from './factory-name.js'
-import { factoryNamespace } from './factory-namespace.js'
+import {factoryNamespace} from './factory-namespace.js'
 
 /** @type {Construct} */
 export const directiveLeaf = {tokenize: tokenizeDirectiveLeaf}

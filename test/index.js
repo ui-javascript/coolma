@@ -378,9 +378,13 @@ test('micromark-extension-directive (syntax)', (t) => {
   t.test('leaf', (t) => {
     t.equal(micromark('@@b', options()), '', 'should support a directive')
 
-    t.equal(micromark('@@b[my-name]', options()), '', 'should support a directive')
+    t.equal(
+      micromark('@@b[my-name]', options()),
+      '',
+      'should support a directive'
+    )
 
-    // t.equal(
+    // T.equal(
     //   micromark(':', options()),
     //   '<p>:</p>',
     //   'should not support one colon'
@@ -730,7 +734,7 @@ test('micromark-extension-directive (syntax)', (t) => {
   t.test('container', (t) => {
     t.equal(micromark('@@@b', options()), '', 'should support a directive')
 
-    //     t.equal(
+    //     T.equal(
     //       micromark(':', options()),
     //       '<p>:</p>',
     //       'should not support one colon'
@@ -1248,25 +1252,37 @@ test('content', (t) => {
   )
 
   t.equal(
-    micromark('@abbr[my-namespace3](x\\&y&amp;z){title: "hhee" test , hhh: "333", }', options({abbr})),
+    micromark(
+      '@abbr[my-namespace3](x\\&y&amp;z){title: "hhee" test , hhh: "333", }',
+      options({abbr})
+    ),
     '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
     'should support character escapes and character references in label'
   )
 
   t.equal(
-    micromark('@abbr[my-namespace4](x\\&y&amp;z){title: hhee, hhh: "333"}', options({abbr})),
+    micromark(
+      '@abbr[my-namespace4](x\\&y&amp;z){title: hhee, hhh: "333"}',
+      options({abbr})
+    ),
     '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
     'should support character escapes and character references in label'
   )
 
   t.equal(
-    micromark('@abbr[my-namespace5](x\\&y&amp;z){title: hhee, hhh: 333, }', options({abbr})),
+    micromark(
+      '@abbr[my-namespace5](x\\&y&amp;z){title: hhee, hhh: 333, }',
+      options({abbr})
+    ),
     '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
     'should support character escapes and character references in label'
   )
 
   t.equal(
-    micromark('@abbr[my-namespace6](x\\&y&amp;z){title: "hhee" hhh: "333"}', options({abbr})),
+    micromark(
+      '@abbr[my-namespace6](x\\&y&amp;z){title: "hhee" hhh: "333"}',
+      options({abbr})
+    ),
     '<p><abbr title="hhee">x&amp;y&amp;z</abbr></p>',
     'should support character escapes and character references in label'
   )
@@ -1494,7 +1510,7 @@ test('content', (t) => {
 function abbr(d) {
   if (d.type !== 'textDirective') return false
 
-  console.log("当前节点")
+  console.log('当前节点')
   console.log(d)
 
   this.tag('<abbr')

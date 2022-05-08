@@ -115,7 +115,7 @@ export function factoryNamespace(
   /** @type {State} */
   function dataEscape(code) {
     if (
-      code === codes.leftSquareBracket||
+      code === codes.leftSquareBracket ||
       code === codes.backslash ||
       code === codes.rightSquareBracket
     ) {

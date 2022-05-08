@@ -86,7 +86,6 @@ function tokenizeDirectiveContainer(effects, ok, nok) {
       : afterLabel(code)
   }
 
-
   /** @type {State} */
   function afterLabel(code) {
     return code === codes.leftCurlyBrace

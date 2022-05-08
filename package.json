@@ -1,7 +1,7 @@
 {
   "name": "coolma",
-  "version": "3.0.3",
-  "description": "support directives @anno(content){attr=xxx})",
+  "version": "3.0.5",
+  "description": "support directives @anno[namespace](content1, content2){attr1: xxx, attr2: yyy})",
   "license": "MIT",
   "publisher": "luo0412",
   "keywords": [

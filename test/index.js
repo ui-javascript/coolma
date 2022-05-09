@@ -1255,8 +1255,20 @@ test('content', (t) => {
   //   'should support character escapes and character references in arg'
   // )
 
+  // t.equal(
+  //   micromark('@abbr[my-namespace1](x  yxxxx)', options({abbr})),
+  //   '<p><abbr>x</abbr></p>',
+  //   'should support character escapes and character references in arg'
+  // )
+
+  // t.equal(
+  //   micromark('@abbr[my-namespace1](@x , yxxxx)', options({abbr})),
+  //   '<p><abbr>@x</abbr></p>',
+  //   'should support character escapes and character references in arg'
+  // )
+
   t.equal(
-    micromark('@abbr[my-namespace1](x, yxxxx, xxx36666)', options({abbr})),
+    micromark('@abbr[my-namespace1]("x")', options({abbr})),
     '<p><abbr>x</abbr></p>',
     'should support character escapes and character references in arg'
   )

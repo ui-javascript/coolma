@@ -140,15 +140,26 @@ export function factoryArgs(
   function between(code) {
    
     if (
+      // code === codes.eof ||
+      // code === codes.lessThan ||
+      // code === codes.equalsTo ||
+      // code === codes.colon ||
+      // code === codes.greaterThan ||
+      // code === codes.graveAccent ||
+      // code === codes.rightParenthesis ||
+      // (disallowEol && markdownLineEnding(code)) ||
+      code === codes.dash ||
+      code === codes.dot ||
+      code === codes.quotationMark || 
+      code === codes.apostrophe ||
       code === codes.atSign ||
       code === codes.underscore ||
-      asciiAlpha(code)
+      asciiAlphanumeric(code)
     ) {
       effects.enter(argType)
-      effects.enter(argValueType)
-      effects.consume(code)
-      return name
+      return valueBefore(code)
     }
+
 
     if (disallowEol && markdownSpace(code)) {
       return factorySpace(effects, between, types.whitespace)(code)
@@ -161,34 +172,6 @@ export function factoryArgs(
     return end(code)
   }
 
-
-  /** @type {State} */
-  function name(code) {
-    if (
-      code === codes.dash ||
-      code === codes.dot ||
-      code === codes.atSign ||
-      code === codes.underscore ||
-      asciiAlphanumeric(code)
-    ) {
-      effects.consume(code)
-      return name
-    }
-
-    effects.exit(argValueType)
-
-    if (disallowEol && markdownSpace(code)) {
-      return factorySpace(effects, valueBefore, types.whitespace)(code)
-    }
-
-    if (!disallowEol && markdownLineEndingOrSpaceOrComma(code)) {
-      return factoryWhitespaceOrComma(effects, valueBefore)(code)
-    }
-
-    return valueBefore(code)
-  }
-
- 
 
   /** @type {State} */
   function valueBefore(code) {
@@ -206,6 +189,7 @@ export function factoryArgs(
     }
 
     if (code === codes.quotationMark || code === codes.apostrophe) {
+      effects.enter(argValueType)
       effects.enter(argValueLiteralType)
       effects.enter(argValueMarker)
       effects.consume(code)
@@ -265,11 +249,12 @@ export function factoryArgs(
       effects.consume(code)
       effects.exit(argValueMarker)
       effects.exit(argValueLiteralType)
+      effects.exit(argValueType)
       effects.exit(argType)
       return valueQuotedAfter
     }
 
-    effects.enter(argValueType)
+    // effects.enter(argValueType)
     return valueQuotedBetween(code)
   }
 

@@ -97,9 +97,13 @@ function tokenizeLabel(effects, ok, nok) {
     effects,
     ok,
     nok,
-    'directiveLeafLabel',
-    'directiveLeafLabelMarker',
-    'directiveLeafLabelString',
+    'directiveTextLabels',
+    'directiveTextLabelsMarker',
+    'directiveTextLabel',
+    'directiveTextLabelValueLiteral',
+    'directiveTextLabelValue',
+    'directiveTextLabelValueMarker',
+    'directiveTextLabelValueData',
     true
   )
 }

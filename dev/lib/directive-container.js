@@ -252,9 +252,13 @@ function tokenizeLabel(effects, ok, nok) {
     effects,
     ok,
     nok,
-    'directiveContainerLabel',
-    'directiveContainerLabelMarker',
-    'directiveContainerLabelString',
+    'directiveTextLabels',
+    'directiveTextLabelsMarker',
+    'directiveTextLabel',
+    'directiveTextLabelValueLiteral',
+    'directiveTextLabelValue',
+    'directiveTextLabelValueMarker',
+    'directiveTextLabelValueData',
     true
   )
 }

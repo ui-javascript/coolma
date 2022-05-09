@@ -6,7 +6,7 @@
 
 /**
  * @typedef {[string, string]} Attribute
- * @typedef {[string]} Labels
+ * @typedef {[string]} Args
  * @typedef {'containerDirective'|'leafDirective'|'textDirective'} DirectiveType
  *
  * @typedef Directive
@@ -14,7 +14,7 @@
  * @property {string} name
  * @property {string} [namespace]
  * @property {Record<string, string>} [attributes]
- * @property {string[]} [labels]
+ * @property {string[]} [args]
  * @property {string} [content]
  * @property {number} [_fenceCount]
  *
@@ -39,7 +39,7 @@ export function directiveHtml(options = {}) {
         return enter.call(this, 'containerDirective')
       },
       directiveContainerAttributes: enterAttributes,
-      directiveContainerLabel: enterLabel,
+      directiveContainerArgs: enterArgs,
       directiveContainerContent() {
         this.buffer()
       },
@@ -48,14 +48,14 @@ export function directiveHtml(options = {}) {
         return enter.call(this, 'leafDirective')
       },
       directiveLeafAttributes: enterAttributes,
-      directiveLeafLabel: enterLabel,
+      directiveLeafArgs: enterArgs,
       directiveLeafNamespace: enterNamespace,
 
       directiveText() {
         return enter.call(this, 'textDirective')
       },
       directiveTextAttributes: enterAttributes,
-      directiveTextLabel: enterLabel,
+      directiveTextArgs: enterArgs,
       directiveTextNamespace: enterNamespace
     },
     exit: {
@@ -67,8 +67,8 @@ export function directiveHtml(options = {}) {
       directiveContainerAttributes: exitAttributes,
       directiveContainerContent: exitContainerContent,
       directiveContainerFence: exitContainerFence,
-      directiveContainerLabelValue: exitLabelValue,
-      directiveContainerLabels: exitLabels,
+      directiveContainerArgValue: exitArgValue,
+      directiveContainerArgs: exitArgs,
       directiveContainerName: exitName,
 
       directiveLeaf: exit,
@@ -77,8 +77,8 @@ export function directiveHtml(options = {}) {
       directiveLeafAttributeName: exitAttributeName,
       directiveLeafAttributeValue: exitAttributeValue,
       directiveLeafAttributes: exitAttributes,
-      directiveLeafLabelValue: exitLabelValue,
-      directiveLeafLabels: exitLabels,
+      directiveLeafArgValue: exitArgValue,
+      directiveLeafArgs: exitArgs,
       directiveLeafNamespace: exitNamespace,
       directiveLeafName: exitName,
 
@@ -88,8 +88,8 @@ export function directiveHtml(options = {}) {
       directiveTextAttributeName: exitAttributeName,
       directiveTextAttributeValue: exitAttributeValue,
       directiveTextAttributes: exitAttributes,
-      directiveTextLabelValue: exitLabelValue,
-      directiveTextLabels: exitLabels,
+      directiveTextArgValue: exitArgValue,
+      directiveTextArgs: exitArgs,
       directiveTextNamespace: exitNamespace,
       directiveTextName: exitName
     }
@@ -116,9 +116,9 @@ export function directiveHtml(options = {}) {
   }
 
   /** @type {_Handle} */
-  function enterLabel() {
+  function enterArgs() {
     this.buffer()
-    this.setData('directiveLabels', [])
+    this.setData('directiveArgs', [])
   }
 
   /** @type {_Handle} */
@@ -180,14 +180,14 @@ export function directiveHtml(options = {}) {
   }
 
   /** @type {_Handle} */
-  function exitLabelValue(token) {
-    /** @type {string[]} */
+  function exitArgValue(token) {
+    /** @type {Args} */
     // @ts-expect-error
-    let labels = this.getData('directiveLabels') 
-    console.log("===")
-    console.log(this.sliceSerialize(token))
+    let args = this.getData('directiveArgs') 
+    // console.log("===")
+    // console.log(this.sliceSerialize(token))
 
-    labels.push(this.sliceSerialize(token))
+    args.push(this.sliceSerialize(token))
   }
 
   /** @type {_Handle} */
@@ -221,31 +221,31 @@ export function directiveHtml(options = {}) {
 
 
    /** @type {_Handle} */
-   function exitLabels() {
+   function exitArgs() {
     /** @type {Directive[]} */
     // @ts-expect-error
     const stack = this.getData('directiveStack')
-    /** @type {string[]} */
+    /** @type {Args} */
     // @ts-expect-error
-    const labels = this.getData('directiveLabels') 
+    const args = this.getData('directiveArgs') 
     /** @type {string[]} */
     const cleaned = []
     /** @type {string} */
-    let label 
+    let arg 
     let index = -1
 
-    console.log("==>")
-    console.log(stack)
-    console.log(labels)
-    while (++index < labels.length) {
-      label = labels[index]
+    // console.log("==>")
+    // console.log(stack)
+    // console.log(args)
+    while (++index < args.length) {
+      arg = args[index]
 
-      cleaned.push(label)
+      cleaned.push(arg)
     }
 
     this.resume()
-    this.setData('directiveLabels')
-    stack[stack.length - 1].labels = cleaned
+    this.setData('directiveArgs')
+    stack[stack.length - 1].args = cleaned
   }
 
   /** @type {_Handle} */

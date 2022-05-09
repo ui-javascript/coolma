@@ -10,7 +10,7 @@ import {markdownLineEnding} from 'micromark-util-character'
 import {codes} from 'micromark-util-symbol/codes.js'
 import {types} from 'micromark-util-symbol/types.js'
 import {factoryAttributes} from './factory-attributes.js'
-import {factoryLabel} from './factory-label.js'
+import {factoryArgs} from './factory-args.js'
 import {factoryName} from './factory-name.js'
 import {factoryNamespace} from './factory-namespace.js'
 
@@ -18,7 +18,7 @@ import {factoryNamespace} from './factory-namespace.js'
 export const directiveLeaf = {tokenize: tokenizeDirectiveLeaf}
 
 const namespace = {tokenize: tokenizeNamespace, partial: true}
-const label = {tokenize: tokenizeLabel, partial: true}
+const args = {tokenize: tokenizeArgs, partial: true}
 const attributes = {tokenize: tokenizeAttributes, partial: true}
 
 /** @type {Tokenizer} */
@@ -63,12 +63,12 @@ function tokenizeDirectiveLeaf(effects, ok, nok) {
   /** @type {State} */
   function afterNamespace(code) {
     return code === codes.leftParenthesis
-      ? effects.attempt(label, afterLabel, afterLabel)(code)
-      : afterLabel(code)
+      ? effects.attempt(args, afterArgs, afterArgs)(code)
+      : afterArgs(code)
   }
 
   /** @type {State} */
-  function afterLabel(code) {
+  function afterArgs(code) {
     return code === codes.leftCurlyBrace
       ? effects.attempt(attributes, afterAttributes, afterAttributes)(code)
       : afterAttributes(code)
@@ -91,19 +91,19 @@ function tokenizeDirectiveLeaf(effects, ok, nok) {
 }
 
 /** @type {Tokenizer} */
-function tokenizeLabel(effects, ok, nok) {
+function tokenizeArgs(effects, ok, nok) {
   // Always a `[`
-  return factoryLabel(
+  return factoryArgs(
     effects,
     ok,
     nok,
-    'directiveTextLabels',
-    'directiveTextLabelsMarker',
-    'directiveTextLabel',
-    'directiveTextLabelValueLiteral',
-    'directiveTextLabelValue',
-    'directiveTextLabelValueMarker',
-    'directiveTextLabelValueData',
+    'directiveTextArgs',
+    'directiveTextArgsMarker',
+    'directiveTextArg',
+    'directiveTextArgValueLiteral',
+    'directiveTextArgValue',
+    'directiveTextArgValueMarker',
+    'directiveTextArgValueData',
     true
   )
 }

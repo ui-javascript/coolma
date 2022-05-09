@@ -89,28 +89,28 @@ export function factoryWhitespaceOrComma(effects, ok) {
  * @param {Effects} effects
  * @param {State} ok
  * @param {State} nok
- * @param {string} labelsType
- * @param {string} labelsMarkerType
- * @param {string} labelType
- * @param {string} labelValueLiteralType
- * @param {string} labelValueType
- * @param {string} labelValueMarker
- * @param {string} labelValueData
+ * @param {string} argsType
+ * @param {string} argsMarkerType
+ * @param {string} argType
+ * @param {string} argValueLiteralType
+ * @param {string} argValueType
+ * @param {string} argValueMarker
+ * @param {string} argValueData
  * @param {boolean} [disallowEol=false]
  */
 // eslint-disable-next-line max-params
-export function factoryLabel(
+export function factoryArgs(
   effects,
   ok,
   nok,
 
-  labelsType,
-  labelsMarkerType,
-  labelType,
-  labelValueLiteralType,
-  labelValueType,
-  labelValueMarker,
-  labelValueData,
+  argsType,
+  argsMarkerType,
+  argType,
+  argValueLiteralType,
+  argValueType,
+  argValueMarker,
+  argValueData,
 
   disallowEol
 ) {
@@ -124,10 +124,10 @@ export function factoryLabel(
   /** @type {State} */
   function start(code) {
     assert(code === codes.leftParenthesis, 'expected `{`')
-    effects.enter(labelsType)
-    effects.enter(labelsMarkerType)
+    effects.enter(argsType)
+    effects.enter(argsMarkerType)
     effects.consume(code)
-    effects.exit(labelsMarkerType)
+    effects.exit(argsMarkerType)
     return between
   }
 
@@ -139,8 +139,8 @@ export function factoryLabel(
       code === codes.underscore ||
       asciiAlpha(code)
     ) {
-      effects.enter(labelType)
-      effects.enter(labelValueType)
+      effects.enter(argType)
+      effects.enter(argValueType)
       effects.consume(code)
       return name
     }
@@ -170,7 +170,7 @@ export function factoryLabel(
       return name
     }
 
-    effects.exit(labelValueType)
+    effects.exit(argValueType)
 
     if (disallowEol && markdownSpace(code)) {
       return factorySpace(effects, valueBefore, types.whitespace)(code)
@@ -201,10 +201,10 @@ export function factoryLabel(
     }
 
     if (code === codes.quotationMark || code === codes.apostrophe) {
-      effects.enter(labelValueLiteralType)
-      effects.enter(labelValueMarker)
+      effects.enter(argValueLiteralType)
+      effects.enter(argValueMarker)
       effects.consume(code)
-      effects.exit(labelValueMarker)
+      effects.exit(argValueMarker)
       marker = code
       return valueQuotedStart
     }
@@ -217,8 +217,8 @@ export function factoryLabel(
       return factoryWhitespaceOrComma(effects, valueBefore)(code)
     }
 
-    effects.enter(labelValueType)
-    effects.enter(labelValueData)
+    effects.enter(argValueType)
+    effects.enter(argValueData)
     effects.consume(code)
     marker = undefined
     return valueUnquoted
@@ -243,9 +243,9 @@ export function factoryLabel(
       code === codes.rightParenthesis ||
       markdownLineEndingOrSpaceOrComma(code)
     ) {
-      effects.exit(labelValueData)
-      effects.exit(labelValueType)
-      effects.exit(labelType)
+      effects.exit(argValueData)
+      effects.exit(argValueType)
+      effects.exit(argType)
       return between(code)
     }
 
@@ -256,22 +256,22 @@ export function factoryLabel(
   /** @type {State} */
   function valueQuotedStart(code) {
     if (code === marker) {
-      effects.enter(labelValueMarker)
+      effects.enter(argValueMarker)
       effects.consume(code)
-      effects.exit(labelValueMarker)
-      effects.exit(labelValueLiteralType)
-      effects.exit(labelType)
+      effects.exit(argValueMarker)
+      effects.exit(argValueLiteralType)
+      effects.exit(argType)
       return valueQuotedAfter
     }
 
-    effects.enter(labelValueType)
+    effects.enter(argValueType)
     return valueQuotedBetween(code)
   }
 
   /** @type {State} */
   function valueQuotedBetween(code) {
     if (code === marker) {
-      effects.exit(labelValueType)
+      effects.exit(argValueType)
       return valueQuotedStart(code)
     }
 
@@ -286,7 +286,7 @@ export function factoryLabel(
         : factoryWhitespaceOrComma(effects, valueQuotedBetween)(code)
     }
 
-    effects.enter(labelValueData)
+    effects.enter(argValueData)
     effects.consume(code)
     return valueQuoted
   }
@@ -298,7 +298,7 @@ export function factoryLabel(
       code === codes.eof ||
       markdownLineEndingOrComma(code)
     ) {
-      effects.exit(labelValueData)
+      effects.exit(argValueData)
       return valueQuotedBetween(code)
     }
 
@@ -317,10 +317,10 @@ export function factoryLabel(
   /** @type {State} */
   function end(code) {
     if (code === codes.rightParenthesis) {
-      effects.enter(labelsMarkerType)
+      effects.enter(argsMarkerType)
       effects.consume(code)
-      effects.exit(labelsMarkerType)
-      effects.exit(labelsType)
+      effects.exit(argsMarkerType)
+      effects.exit(argsType)
       return ok
     }
 

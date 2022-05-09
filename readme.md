@@ -4,7 +4,7 @@ coolma -- markdown的注解形式增强
 
 基于micromark-extension-directive魔改
 
-@anno[namespace](content1, content2){attr1: xxx, attr2: yyy})
+@anno[namespace](arg1, arg2){attr1: xxx, attr2: yyy})
 
 举例:
 

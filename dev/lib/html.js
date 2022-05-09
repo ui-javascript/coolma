@@ -184,9 +184,12 @@ export function directiveHtml(options = {}) {
     /** @type {Args} */
     // @ts-expect-error
     let args = this.getData('directiveArgs') 
-    // console.log("===")
+    console.log("===")
     // console.log(this.sliceSerialize(token))
 
+    // console.log(token)
+    // console.log(this.sliceSerialize(token))
+    // console.log(parseEntities(this.sliceSerialize(token)))
     args.push(this.sliceSerialize(token))
   }
 
@@ -234,9 +237,9 @@ export function directiveHtml(options = {}) {
     let arg 
     let index = -1
 
-    // console.log("==>")
+    console.log("==>")
     // console.log(stack)
-    // console.log(args)
+    console.log(args)
     while (++index < args.length) {
       arg = args[index]
 

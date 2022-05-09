@@ -164,20 +164,20 @@ test('micromark-extension-directive (syntax)', (t) => {
     // )
 
     // @todo
-    // t.equal(
-    //   micromark('@a{a *b* c}asd', options()),
-    //   '<p>asd</p>',
-    //   'should support content in an arg'
-    // )
+    t.equal(
+      micromark('@a{a, title: *b*, c}asd', options()),
+      '<p>asd</p>',
+      'should support content in an arg'
+    )
 
-    // @todo
+    // // @todo
     // t.equal(
-    //   micromark('@a(a, *b*, c) asd', options()),
-    //   '<p> asd</p>',
+    //   micromark('@a(a, "*b*", c)asd', options()),
+    //   '<p>asd</p>',
     //   'should support markdown in an arg'
     // )
 
-    // @todo
+    // // @todo
     // t.equal(
     //   micromark('a @b(c, "@d(e)", f) g', options()),
     //   '<p>a  g</p>',
@@ -1269,6 +1269,18 @@ test('content', (t) => {
 
   t.equal(
     micromark('@abbr[my-namespace1]("x")', options({abbr})),
+    '<p><abbr>x</abbr></p>',
+    'should support character escapes and character references in arg'
+  )
+
+  // t.equal(
+  //   micromark('@abbr[my-namespace1]("x", y)', options({abbr})),
+  //   '<p><abbr>x</abbr></p>',
+  //   'should support character escapes and character references in arg'
+  // )
+
+  t.equal(
+    micromark('@abbr[my-namespace1]("x", "y")', options({abbr})),
     '<p><abbr>x</abbr></p>',
     'should support character escapes and character references in arg'
   )

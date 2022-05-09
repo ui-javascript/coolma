@@ -13,7 +13,6 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factorySpace} from 'micromark-factory-space'
 // Import {factoryWhitespace} from 'micromark-factory-whitespace'
 import {
-  asciiAlpha,
   asciiAlphanumeric,
   markdownLineEnding,
   markdownLineEndingOrSpace,
@@ -114,15 +113,9 @@ export function factoryArgs(
 
   disallowEol
 ) {
-  /** @type {string} */
-  let type
+
   /** @type {Code|undefined} */
   let marker
-
-  let size = 0
-  let balance = 0
-  /** @type {Token|undefined} */
-  let previous
 
   return start
 
@@ -148,10 +141,10 @@ export function factoryArgs(
       // code === codes.graveAccent ||
       // code === codes.rightParenthesis ||
       // (disallowEol && markdownLineEnding(code)) ||
-      code === codes.dash ||
-      code === codes.dot ||
       code === codes.quotationMark || 
       code === codes.apostrophe ||
+      code === codes.dash ||
+      code === codes.dot ||
       code === codes.atSign ||
       code === codes.underscore ||
       asciiAlphanumeric(code)
@@ -195,7 +188,9 @@ export function factoryArgs(
       effects.consume(code)
       effects.exit(argValueMarker)
       marker = code
-      return valueQuotedStart
+      effects.enter(argValueData)
+      console.log("开启数据记录")
+      return valueQuotedBetween
     }
 
     if (disallowEol && markdownSpace(code)) {
@@ -243,8 +238,10 @@ export function factoryArgs(
   }
 
   /** @type {State} */
-  function valueQuotedStart(code) {
+  function valueQuotedBetween(code) {
     if (code === marker) {
+      effects.exit(argValueData)
+      console.log("退出数据记录")
       effects.enter(argValueMarker)
       effects.consume(code)
       effects.exit(argValueMarker)
@@ -252,17 +249,6 @@ export function factoryArgs(
       effects.exit(argValueType)
       effects.exit(argType)
       return valueQuotedAfter
-    }
-
-    // effects.enter(argValueType)
-    return valueQuotedBetween(code)
-  }
-
-  /** @type {State} */
-  function valueQuotedBetween(code) {
-    if (code === marker) {
-      effects.exit(argValueType)
-      return valueQuotedStart(code)
     }
 
     if (code === codes.eof) {
@@ -276,24 +262,9 @@ export function factoryArgs(
         : factoryWhitespaceOrComma(effects, valueQuotedBetween)(code)
     }
 
-    effects.enter(argValueData)
     effects.consume(code)
-    return valueQuoted
-  }
-
-  /** @type {State} */
-  function valueQuoted(code) {
-    if (
-      code === marker ||
-      code === codes.eof ||
-      markdownLineEndingOrComma(code)
-    ) {
-      effects.exit(argValueData)
-      return valueQuotedBetween(code)
-    }
-
-    effects.consume(code)
-    return valueQuoted
+    console.log("存入" + code)
+    return valueQuotedBetween
   }
 
   /** @type {State} */

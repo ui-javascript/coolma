@@ -190,7 +190,7 @@ export function factoryArgs(
       marker = code
       effects.enter(argValueData)
       console.log("开启数据记录")
-      return valueQuotedBetween
+      return valueQuoted
     }
 
     if (disallowEol && markdownSpace(code)) {
@@ -238,7 +238,7 @@ export function factoryArgs(
   }
 
   /** @type {State} */
-  function valueQuotedBetween(code) {
+  function valueQuoted(code) {
     if (code === marker) {
       effects.exit(argValueData)
       console.log("退出数据记录")
@@ -259,12 +259,12 @@ export function factoryArgs(
     if (markdownLineEnding(code)) {
       return disallowEol
         ? nok(code)
-        : factoryWhitespaceOrComma(effects, valueQuotedBetween)(code)
+        : factoryWhitespaceOrComma(effects, valueQuoted)(code)
     }
 
     effects.consume(code)
     console.log("存入" + code)
-    return valueQuotedBetween
+    return valueQuoted
   }
 
   /** @type {State} */

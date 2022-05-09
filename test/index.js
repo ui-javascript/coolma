@@ -162,20 +162,23 @@ test('micromark-extension-directive (syntax)', (t) => {
       'should support an eol in an arg'
     )
 
+    // @todo
     t.equal(
-      micromark('@a(a b c)asd', options()),
-      '<p>asd</p>',
+      micromark('@a(a, b, c) asd', options()),
+      '<p> asd</p>',
       'should support content in an arg'
     )
 
+    // @todo
     t.equal(
-      micromark('@a(a *b* c)asd', options()),
-      '<p>asd</p>',
+      micromark('@a(a, *b*, c) asd', options()),
+      '<p> asd</p>',
       'should support markdown in an arg'
     )
 
+    // @todo
     t.equal(
-      micromark('a @b(c @d(e) f) g', options()),
+      micromark('a @b(c, "@d(e)", f) g', options()),
       '<p>a  g</p>',
       'should support a directive in an arg'
     )
@@ -1246,8 +1249,8 @@ test('micromark-extension-directive (compile)', (t) => {
 
 test('content', (t) => {
   t.equal(
-    micromark('@abbr[my-namespace1](x "yxxxx")', options({abbr})),
-    '<p><abbr>x</abbr></p>',
+    micromark('@abbr[my-namespace1]("@x", "@yxxxx")', options({abbr})),
+    '<p><abbr>@x</abbr></p>',
     'should support character escapes and character references in arg'
   )
 
@@ -1520,8 +1523,8 @@ test('content', (t) => {
 
 /** @type {Handle} */
 function abbr(d) {
-  console.log(d)
   if (d.type !== 'textDirective') return false
+  console.log(d)
 
   this.tag('<abbr')
 

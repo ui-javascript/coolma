@@ -119,11 +119,16 @@ export function factoryArgs(
   /** @type {Code|undefined} */
   let marker
 
+  let size = 0
+  let balance = 0
+  /** @type {Token|undefined} */
+  let previous
+
   return start
 
   /** @type {State} */
   function start(code) {
-    assert(code === codes.leftParenthesis, 'expected `{`')
+    assert(code === codes.leftParenthesis, 'expected `(`')
     effects.enter(argsType)
     effects.enter(argsMarkerType)
     effects.consume(code)

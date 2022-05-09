@@ -13,7 +13,8 @@ import {types} from 'micromark-util-symbol/types.js'
 import {factorySpace} from 'micromark-factory-space'
 // Import {factoryWhitespace} from 'micromark-factory-whitespace'
 import {
-  asciiAlphanumeric,
+  // asciiAlphanumeric,
+  asciiAtext,
   markdownLineEnding,
   markdownLineEndingOrSpace,
   markdownSpace
@@ -147,7 +148,7 @@ export function factoryArgs(
       code === codes.dot ||
       code === codes.atSign ||
       code === codes.underscore ||
-      asciiAlphanumeric(code)
+      asciiAtext(code)
     ) {
       effects.enter(argType)
       return valueBefore(code)
@@ -189,7 +190,7 @@ export function factoryArgs(
       effects.exit(argValueMarker)
       marker = code
       effects.enter(argValueData)
-      console.log("开启数据记录")
+      // console.log("开启数据记录")
       return valueQuoted
     }
 
@@ -241,7 +242,7 @@ export function factoryArgs(
   function valueQuoted(code) {
     if (code === marker) {
       effects.exit(argValueData)
-      console.log("退出数据记录")
+      // console.log("退出数据记录")
       effects.enter(argValueMarker)
       effects.consume(code)
       effects.exit(argValueMarker)
@@ -263,7 +264,7 @@ export function factoryArgs(
     }
 
     effects.consume(code)
-    console.log("存入" + code)
+    // console.log("存入" + code)
     return valueQuoted
   }
 

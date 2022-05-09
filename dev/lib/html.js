@@ -67,7 +67,7 @@ export function directiveHtml(options = {}) {
       directiveContainerAttributes: exitAttributes,
       directiveContainerContent: exitContainerContent,
       directiveContainerFence: exitContainerFence,
-      directiveContainerArgValue: exitArgValue,
+      directiveContainerArgValueData: exitArgValueData,
       directiveContainerArgs: exitArgs,
       directiveContainerName: exitName,
 
@@ -77,7 +77,7 @@ export function directiveHtml(options = {}) {
       directiveLeafAttributeName: exitAttributeName,
       directiveLeafAttributeValue: exitAttributeValue,
       directiveLeafAttributes: exitAttributes,
-      directiveLeafArgValue: exitArgValue,
+      directiveLeafArgValueData: exitArgValueData,
       directiveLeafArgs: exitArgs,
       directiveLeafNamespace: exitNamespace,
       directiveLeafName: exitName,
@@ -88,7 +88,7 @@ export function directiveHtml(options = {}) {
       directiveTextAttributeName: exitAttributeName,
       directiveTextAttributeValue: exitAttributeValue,
       directiveTextAttributes: exitAttributes,
-      directiveTextArgValue: exitArgValue,
+      directiveTextArgValueData: exitArgValueData,
       directiveTextArgs: exitArgs,
       directiveTextNamespace: exitNamespace,
       directiveTextName: exitName
@@ -180,7 +180,7 @@ export function directiveHtml(options = {}) {
   }
 
   /** @type {_Handle} */
-  function exitArgValue(token) {
+  function exitArgValueData(token) {
     /** @type {Args} */
     // @ts-expect-error
     let args = this.getData('directiveArgs') 

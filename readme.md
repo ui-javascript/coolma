@@ -10,7 +10,7 @@ markdown的注解形式增强
 
 - https://ui-javascript.github.io/demo-coolma-202205/
 
-![image](https://user-images.githubusercontent.com/16240829/189600730-2c17b25d-753a-4cea-867b-133f31c95e07.png)
+![image](https://user-images.githubusercontent.com/16240829/189601135-babe002e-c6b9-4a3a-90da-c69b0a77d00a.png)
 
 # 用法
 
